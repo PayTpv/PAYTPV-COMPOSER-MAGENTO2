@@ -106,6 +106,9 @@ class Data extends AbstractHelper
      */
     private $_orderSender;
 
+    /** @var  CustomerInterfaceFactory */
+    private $_customerFactory;
+
 
     /**
      * Data constructor.
@@ -124,6 +127,7 @@ class Data extends AbstractHelper
      * @param \Magento\Framework\Api\SearchCriteriaBuilder      $searchCriteriaBuilder
      * @param \Magento\Sales\Model\Order\Email\Sender\OrderSender             $orderSender
      * @param \Magento\Customer\Model\Session                   $session
+     * @param \Magento\Customer\Model\CustomerFactory           $customerFactory
      */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
@@ -143,7 +147,8 @@ class Data extends AbstractHelper
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
         \Paytpv\Payment\Logger\Logger $logger,
         \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
-        \Magento\Customer\Model\Session $session
+        \Magento\Customer\Model\Session $session,
+        \Magento\Customer\Model\CustomerFactory $customerFactory
     ) {
         parent::__construct($context);
         $this->_encryptor = $encryptor;
@@ -164,6 +169,7 @@ class Data extends AbstractHelper
         $this->_searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->_orderSender = $orderSender;
         $this->_logger = $logger;
+        $this->_customerFactory = $customerFactory;
     }
 
     /**
@@ -256,7 +262,8 @@ class Data extends AbstractHelper
      *
      * @return array
      */
-    public function _buildSessionParams($result,$orderid){
+    public function _buildSessionParams($result,$orderid)
+    {
         $result = ($result) ? '1' : '0';
         $timestamp = strftime('%Y%m%d%H%M%S');
         $merchant_code = $this->getConfigData('merchant_code');
@@ -294,14 +301,15 @@ class Data extends AbstractHelper
 
        
           
-        if ($response->DS_ERROR_ID==0){
+        if ($response->DS_ERROR_ID==0) {
             $url = $response->URL_REDIRECT;
         }
         return $url;
     }
 
 
-    public function customerIsLogged(){
+    public function customerIsLogged()
+    {
         return $this->_session->isLoggedIn();
     }
 
@@ -561,13 +569,16 @@ class Data extends AbstractHelper
     }
 
     public function getCustomerId(){
-        return $this->_session->getCustomer()->getId(); 
+        return $this->_session->getCustomer()->getId();
     }
 
-
-    public function createTransaction($type, $transactionid, $order = null, $paymentData = array()){
-        
-        try{
+    public function getCustomerById($id) {
+        return $this->_customerFactory->create()->load($id);
+    }
+    
+    public function createTransaction($type, $transactionid, $order = null, $paymentData = array())
+    {
+        try {
             //get payment object from order object
             $payment = $order->getPayment();
             $payment->setLastTransId($transactionid);
@@ -577,7 +588,7 @@ class Data extends AbstractHelper
             $this->setAdditionalInfo($payment, $paymentData);
 
 
-            switch ($type){
+            switch ($type) {
                 case \Magento\Sales\Model\Order\Payment\Transaction::TYPE_CAPTURE:
                     $message = __('Captured amount of %1',$order->getBaseCurrency()->formatTxt($order->getGrandTotal()));
                 break;
@@ -609,7 +620,7 @@ class Data extends AbstractHelper
             $this->_addHistoryComment($order, $message);
 
             return $transaction->save()->getTransactionId();
-        }catch (Exception $e){
+        } catch (Exception $e) {
             throw new \Magento\Framework\Exception\LocalizedException(__('Create Transaction error'));
         }
     }
@@ -662,7 +673,8 @@ class Data extends AbstractHelper
     }
 
 
-    public function getTokenData($payment){
+    public function getTokenData($payment)
+    {
 
         $hash = $payment->getAdditionalInformation(DataAssignObserver::PAYTPV_TOKENCARD);
 
@@ -689,7 +701,8 @@ class Data extends AbstractHelper
     /*
     @@ TODO
     */
-    public function getFirstOrder($order){
+    public function getFirstOrder($order)
+    {
         
         $searchCriteria = $this->_searchCriteriaBuilder
         ->addFilter('customer_id', $this->getCustomerId())
@@ -698,16 +711,12 @@ class Data extends AbstractHelper
 
         $orders = $this->_orderRepository->getList($searchCriteria);
 
-        if (sizeof($orders)>0){
+        if (sizeof($orders)>0) {
             return 0;
         }
         return 1;
     }
 
-
-    /** 
-    @@TODO
-    **/
     public function isFirstPurchaseToken($payment)
     {
 
@@ -723,7 +732,7 @@ class Data extends AbstractHelper
 
         $orders = $this->_orderRepository->getList($searchCriteria);
 
-        if (sizeof($orders)>0){
+        if (sizeof($orders)>0) {
             return false;
         }
         return true;
@@ -731,16 +740,17 @@ class Data extends AbstractHelper
     }
 
 
-    public function CreateTransInvoice($order,$response){
+    public function CreateTransInvoice($order,$response)
+    {
 
         $payment = $order->getPayment();
 
         // Gateway Response
-        if (isset($response['AuthCode'])){
+        if (isset($response['AuthCode'])) {
             $transactionid = $response['AuthCode'];
             $amount = $response['Amount'];
         // Webservice Response
-        }else{
+        } else {
             $transactionid = $response['DS_MERCHANT_AUTHCODE'];
             $amount = $response['DS_MERCHANT_AMOUNT'];
         }
@@ -762,7 +772,7 @@ class Data extends AbstractHelper
         $this->createTransaction($type, $transactionid, $order, $response);
 
         //Should we invoice
-        if ($isAutoSettle){
+        if ($isAutoSettle) {
             $this->createInvoice($order, $transactionid, $amount);
         }
 
@@ -772,10 +782,10 @@ class Data extends AbstractHelper
         }
 
         // Set PAYTPV iduser|tokenuser to order
-        if ( isset($response['IdUser']) && isset($response['TokenUser']) ){
+        if ( isset($response['IdUser']) && isset($response['TokenUser']) ) {
             $IdUser = $response['IdUser'];
             $TokenUser = $response['TokenUser'];
-        }else{
+        } else {
             $data = $this->getTokenData($payment);
             $IdUser = $data["iduser"];
             $TokenUser = $data["tokenuser"];
@@ -786,7 +796,7 @@ class Data extends AbstractHelper
         // Save Customer Card Token for future purchase
         $savecard = $payment->getAdditionalInformation(DataAssignObserver::PAYTPV_SAVECARD);
         $token = $payment->getAdditionalInformation(DataAssignObserver::PAYTPV_TOKENCARD);
-        if ($savecard && $token==""){
+        if ($savecard && $token=="") {
             $customerId = $order->getCustomerId();
             if (!empty($customerId)) {
                 $this->_handleCardStorage($response, $customerId);
@@ -822,7 +832,7 @@ class Data extends AbstractHelper
 
             if ('' == $resp['DS_ERROR_ID'] || 0 == $resp['DS_ERROR_ID']) {
                 return $this->addCustomerCard($customerId,$IdUser,$TokenUser,$resp);
-            }else{
+            } else{
                 return false;
             }
         } catch (\Exception $e) {
@@ -1056,7 +1066,7 @@ class Data extends AbstractHelper
             case 1110: return __("SIGNATURE field error"); break;
             case 1120: return __("Operation unavailable"); break;
             case 1121: return __("Client not found"); break;
-            case 1122: return __("User not found. Contact PayTPV"); break;
+            case 1122: return __("User not found. Contact PAYCOMET"); break;
             case 1123: return __("Invalid signature. Please check your configuration"); break;
             case 1124: return __("Operation not available with the specified user"); break;
             case 1125: return __("Invalid operation in a currency other than Euro"); break;

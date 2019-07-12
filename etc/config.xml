@@ -5,7 +5,7 @@
             <paytpv_payment>
                 <active>0</active>
                 <model>Paytpv\Payment\Model\PaymentMethod</model>
-                <title>Paytpv Payments</title>
+                <title>PAYCOMET Payments</title>
                 <environment>sandbox</environment>
                 <card_offer_save>1</card_offer_save>
                 <card_manage>1</card_manage>
@@ -27,7 +27,7 @@
                 <payment_action>authorize_capture</payment_action>
                 <secure_first>1</secure_first>
                 <remembercardselected>1</remembercardselected>
-                <title>PAYTPV</title>
+                <title>PAYCOMET</title>
                 <currency>EUR</currency>
                 <environment>production</environment>
             </paytpv_payment>

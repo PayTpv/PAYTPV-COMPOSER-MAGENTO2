@@ -28,9 +28,7 @@ class InstallSchema implements InstallSchemaInterface
          */
         $installer->startSetup();
 
-        /**
-         * Create table 'paypal_billing_agreement'
-         */
+       
         $table = $installer->getConnection()->newTable(
             $installer->getTable('paytpv_token')
         )->addColumn(

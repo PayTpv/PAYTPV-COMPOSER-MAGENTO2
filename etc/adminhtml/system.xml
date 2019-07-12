@@ -3,7 +3,7 @@
     <system>
         <section id="payment">
             <group id="paytpv_payment_section" translate="label" type="text" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>PAYTPV</label>
+                <label>PAYCOMET</label>
                 <comment>
                     <![CDATA[]]>
                 </comment>
@@ -17,14 +17,14 @@
                 </field>
                 <group id="paytpv_payment" translate="label" type="text" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>
-                        <![CDATA[PAYTPV Payment Gateway]]>
+                        <![CDATA[PAYCOMET Payment Gateway]]>
                     </label>
                     
                     <group id="paytpv_payment_paytpv" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="1">
                         <comment>
-                            <![CDATA[Reduce the cost of PCI Compliance and risk of chargebacks with our fully customisable Hosted Checkout, Card Storage and Fraud Management solution with Magento 2. If you need a sandbox account please click <a href='https://www.paytpv.com/es/alta-empresa'>here</a>.]]>
+                            <![CDATA[Reduce the cost of PCI Compliance and risk of chargebacks with our fully customisable Hosted Checkout, Card Storage and Fraud Management solution with Magento 2. If you need a sandbox account please click <a href='https://www.paycomet.com/crear-una-cuenta'>here</a>.]]>
                         </comment>
-                        <label>PAYTPV Settings</label>
+                        <label>PAYCOMET Settings</label>
                         <attribute type="expanded">0</attribute>
                         <frontend_model>Magento\Config\Block\System\Config\Form\Fieldset</frontend_model>
                         <field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -139,13 +139,13 @@
                         </field>
                         <field id="iframe_enabled" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
                             <label>Iframe Enabled</label>
-                            <tooltip><![CDATA[Iframe is displayed on the checkout page and contains the Paytpv Payments page. Otherwise it will redirect to the Paytpv Payments page for payment and return afterwards.]]></tooltip>
+                            <tooltip><![CDATA[Iframe is displayed on the checkout page and contains the PAYCOMET Payments page. Otherwise it will redirect to the PAYCOMET Payments page for payment and return afterwards.]]></tooltip>
                             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                             <config_path>payment/paytpv_payment/iframe_enabled</config_path>
                         </field>
                         <field id="iframe_mode" translate="label" type="select" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="0">
                             <label>Iframe Mode</label>
-                            <tooltip>Lightbox is a popup on the checkout page which contains the Paytpv Payments page in the box. Embedded is part of the checkout page.</tooltip>
+                            <tooltip>Lightbox is a popup on the checkout page which contains the PAYCOMET Payments page in the box. Embedded is part of the checkout page.</tooltip>
                             <source_model>Paytpv\Payment\Model\Config\Source\IframeMode</source_model>
                             <config_path>payment/paytpv_payment/iframe_mode</config_path>
                             <depends>
@@ -158,21 +158,7 @@
                             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                             <config_path>payment/paytpv_payment/debug_log</config_path>
                         </field>
-                    </group>
-                    <group id="paytpv_payment_fraad_advanced" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="0" sortOrder="3">
-                        <comment>
-                            <![CDATA[If you want to activate the Scoring you should contact PAYTPV.]]>
-                        </comment>
-                        <label>Scoring</label>
-                        <attribute type="expanded">0</attribute>
-                        <frontend_model>Magento\Config\Block\System\Config\Form\Fieldset</frontend_model>
-                        <field id="merchantdata" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
-                            <label>Send Merchant Data</label>
-                            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                            <config_path>payment/paytpv_payment/merchantdata</config_path>
-                            <tooltip>If you activate this option, you must contact PAYTPV to enable the Advanced Signature VHASH.</tooltip>
-                        </field>
-                    </group>
+                    </group>                    
                     <group id="paytpv_payment_country_specific" translate="label" showInDefault="1" showInWebsite="1" showInStore="0" sortOrder="4">
                         <label>Country Specific Settings</label>
                         <frontend_model>Magento\Config\Block\System\Config\Form\Fieldset</frontend_model>

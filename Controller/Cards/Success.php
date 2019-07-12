@@ -10,7 +10,7 @@ class Success extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         $this->_view->loadLayout();
-        $this->_view->getPage()->getConfig()->getTitle()->set(__('My Stored Cards PAYTPV'));
+        $this->_view->getPage()->getConfig()->getTitle()->set(__('My Stored Cards PAYCOMET'));
         $navigationBlock = $this->_view->getLayout()->getBlock('customer_account_navigation');
         if ($navigationBlock) {
             $navigationBlock->setActive('paytpv_payment/cards/view');

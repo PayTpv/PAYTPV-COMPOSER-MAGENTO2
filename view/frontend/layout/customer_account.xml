@@ -5,7 +5,7 @@
             <block class="Magento\Framework\View\Element\Html\Link\Current" ifconfig="payment/paytpv_payment/card_manage" name="customer-account-navigation-paytpv-payment-link">
                 <arguments>
                     <argument name="path" xsi:type="string">paytpv_payment/cards/view</argument>
-                    <argument name="label" xsi:type="string">My Stored Cards PAYTPV</argument>
+                    <argument name="label" xsi:type="string">My Stored Cards PAYCOMET</argument>
                 </arguments>
             </block>
         </referenceBlock>
