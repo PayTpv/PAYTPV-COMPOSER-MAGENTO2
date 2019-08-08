@@ -742,6 +742,7 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod impleme
 
     private function getMerchantData($order)
     {		
+        return null;
         
         $MERCHANT_EMV3DS = $this->getEMV3DS($order);
 		$SHOPPING_CART = $this->getShoppingCart($order);
