@@ -239,7 +239,7 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod impleme
 
         /*
          * do not send order confirmation mail after order creation wait for
-         * result confirmation from PAYTPV
+         * result confirmation from PAYCOMET
          */
         $order->setCanSendNewEmailFlag(false);
 
@@ -711,7 +711,10 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod impleme
 
         $orderCurrencyCode = $order->getBaseCurrencyCode();
         $amount = $this->_helper->amountFromMagento($order->getBaseGrandTotal(), $orderCurrencyCode);
-        $secure_amount = $this->_helper->amountFromMagento($secure_amount, $orderCurrencyCode);
+
+        if ($secure_amount>0) {
+            $secure_amount = $this->_helper->amountFromMagento($secure_amount, $orderCurrencyCode);
+        }
 
         // Transaccion Segura:
         // Si solo tiene Terminal Seguro
